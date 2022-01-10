@@ -1,0 +1,42 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400&display=swap");
+
+.register,
+.register a {
+  color: rgb(29, 29, 29);
+  text-decoration: none;
+}
+a:hover {
+  text-decoration: underline;
+}
+
+h2 {
+  font-size: 4rem;
+}
+input {
+  display: block;
+  border: none;
+  border-radius: 0.5rem;
+  background-color: #14273e;
+  font-size: 2rem;
+  padding: 1rem;
+  color: white;
+  box-shadow: #4891eb -0.2rem 0.2rem;
+  margin: 1rem;
+}
+::placeholder {
+  font-family: "Poppins", sans-serif;
+  color: white;
+}
+input[type="submit"]:hover {
+  background-color: #224877;
+  transition: 0.5s;
+}
+input[type="text"]:focus {
+  background-color: #1d385a;
+}
+
+.flex {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
