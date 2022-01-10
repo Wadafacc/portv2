@@ -62,7 +62,7 @@ app.get("/", (req, res) => {
 })
 
 app.get("/profile", isLoggedIn, (req, res) => {
-	res.render("profile");
+	res.render("profile", {username: req.body.username});
 })
 
 app.get('/uploadImages', isLoggedIn, (req, res) => {
@@ -129,13 +129,15 @@ app.get('/containers', (req, res) => {
 app.get("/login", (req, res) => {
 	res.render("login");
 });
+app.get("/error", (req, res) => {
+	res.render("error");
+});
+
 
 app.post("/login", passport.authenticate("local", {
 	successRedirect: "/profile",
-	failureRedirect: "/login"
-}), function (req, res) {
-
-});
+	failureRedirect: "/error"
+}), function (req, res) {});
 
 app.get("/register", (req, res) => {
 	res.render("register");
@@ -163,7 +165,7 @@ function isLoggedIn(req, res, next) {
 	if (req.isAuthenticated()) {
 		return next();
 	}
-	res.redirect("/login");
+	res.redirect("login");
 }
 
 app.use(express.static(__dirname));

@@ -21,13 +21,17 @@
 
 
     <div class="flex">
-        <div class="login">
-            <h2>login.</h2>
-            <form action="/login" method="post">
-                <input type="text" placeholder="username" id="xyz" name="username">                <input type="password" placeholder="password" id="password">
-                <input type="submit" value="login." class="submit">
+        <div class="lg">
+            <form action="/login" method="POST">
+
+                <input type="text" placeholder="username" id="xyz" name="username">
+        
+                <input type="password" id="password" name="password" placeholder="password">
+        
+                    <div class="submit">
+                        <button>Login</button>
+                    </div>
             </form>
-            <a href="/register">no account yet?</a>
         </div>
     </div>
 </body>
