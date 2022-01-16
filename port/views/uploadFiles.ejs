@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<link rel="apple-touch-icon" sizes="180x180" href="/favicons/apple-touch-icon.png">
+	<link rel="icon" type="image/png" sizes="32x32" href="/favicons/favicon-32x32.png">
+	<link rel="icon" type="image/png" sizes="16x16" href="/favicons/favicon-16x16.png">
+
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>port. | upload</title>
+	<link rel="stylesheet" href="/views/styles/style.css">
+	<link rel="stylesheet" href="/views/styles/header.css">
+
+</head>
+
+<body>
+	<div class="header">
+		<a href="/"><span class="logotext">port.</span></a>
+		<div class="nav">
+			<a href="/login">login.</a>
+			<a href="/profile">profile.</a>
+		</div>
+	</div>
+	<div class="flex">
+		<h2>upload container.</h2>
+	</div>
+	<div class="flex">
+		<form action="/upload" method="POST" enctype="multipart/form-data">
+			<input type="file" id="file" name="file" value="" required multiple>
+			<div>
+				<button type="submit">Submit</button>
+			</div>
+		</form>
+	</div>
+
+</body>
+
+</html>

@@ -1,0 +1,11 @@
+@import url('https://fonts.googleapis.com/css2?family=Bangers&display=swap');
+
+.fourOfour{
+    font-family: 'Bangers', cursive;
+    color: rgb(29,29,29);
+    font-size:20rem !important;
+}
+h3{
+    color: rgb(29,29,29);
+    font-size: 2rem;
+}

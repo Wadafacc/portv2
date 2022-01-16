@@ -13,31 +13,42 @@
 }
 
 img {
+  display: inline-block;
   overflow: hidden;
-  border: #1d385a 1px solid;
-  border-radius: 5%;
-  height: 13rem;
-  margin-bottom: 0.4rem;
+  height: 15rem;
 }
 
-div:hover {
+.container:hover {
   background-color: #1d385a;
   transition: 0.5s;
   cursor: pointer;
 }
-div img:hover {
-  border: #1d385a 1px solid;
-}
+
 .portname {
+  float:left;
   display: block;
   font-family: "Poppins", sans-serif;
-  font-size: 2rem;
+  font-size: 1.5rem;
   max-width: 13rem;
+  white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 .portsize {
+  float:left;
+  display:block;
+  width:100%;
   color: #00ffdd;
-
   font-size: 1.2rem;
+}
+.flexC {
+  display: flex;
+  align-items:flex-start;
+  justify-content:flex-start;
+  flex-wrap: wrap;
+}
+
+.trashcan{
+  float:right;
+  display:flex;
 }

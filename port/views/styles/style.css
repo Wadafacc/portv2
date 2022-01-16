@@ -1,18 +1,18 @@
 @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400&display=swap");
-
-h2 {
-  color: rgb(29, 29, 29);
-}
-
 * {
   font-family: "Poppins", sans-serif;
 }
+/*
+----------GLOBAL STYLES-----------
+*/
 
-.main,
-.main a {
-  color: white;
-  text-decoration: none;
-  float: left;
+h2 {
+  color: rgb(29, 29, 29);
+  flex-wrap: nowrap;
+}
+p{
+  color: rgb(29, 29, 29);
+  font-size: 1.5rem;
 }
 a:hover {
   text-decoration: underline;
@@ -24,4 +24,50 @@ h2 {
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+/*
+------Input Form Styles-------
+*/
+
+input, button {
+  display: block;
+  border: none;
+  border-radius: 0.5rem;
+  background-color: #14273e;
+  font-size: 2rem;
+  padding: 1rem;
+  color: white;
+  box-shadow: #4891eb -0.2rem 0.2rem;
+  margin: 1rem;
+}
+input[type="submit"]:hover {
+  background-color: #224877;
+  transition: 0.5s;
+}
+input[type="text"]:focus {
+  background-color: #1d385a;
+}
+button:hover{
+  background-color: #224877;
+  transition: 0.5s;
+}
+::placeholder {
+  font-family: "Poppins", sans-serif;
+  color: white;
+}
+
+input::-webkit-file-upload-button{
+  border: none;
+  border-radius: 0.5rem;
+  background-color: #213e61;
+  font-size: 2rem;
+  padding: 1rem;
+  color: white;
+  box-shadow: #4891eb -0.2rem 0.2rem;
+  margin: 1rem;
+}
+input::-webkit-file-upload-button:hover{
+  background-color: #224877;
+  transition: 0.5s;
 }
