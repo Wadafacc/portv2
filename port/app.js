@@ -5,27 +5,26 @@ const express = require('express'),
 	bodyParser = require("body-parser"),
 	LocalStrategy = require("passport-local"),
 	passportLocalMongoose = require("passport-local-mongoose"),
-	User = require("./models/user");
-File = require("./models/file");
+	User = require("./models/user"),
+	File = require("./models/file");
+var fs = require('fs');
+var path = require('path');
+const { check, validationResult } = require('express-validator');
 
 require('dotenv/config');
 
-var fs = require('fs');
-var path = require('path');
-
-//Connecting database
 mongoose.connect(process.env.MONGO_URL, { useNewUrlParser: true, useUnifiedTopology: true }, err => {
 	console.log('connected to ' + process.env.MONGO_URL)
 });
 
 app.use(require("express-session")({
-	secret: "password",       //decode or encode session
+	secret: "password",
 	resave: false,
 	saveUninitialized: false
 }));
 
-passport.serializeUser(User.serializeUser());       //session encoding
-passport.deserializeUser(User.deserializeUser());   //session decoding
+passport.serializeUser(User.serializeUser());
+passport.deserializeUser(User.deserializeUser());
 passport.use(new LocalStrategy(User.authenticate()));
 app.set("view engine", "ejs");
 app.use(bodyParser.urlencoded(
@@ -41,7 +40,6 @@ app.use(function (err, req, res, next) {
 		res.redirect('error');
 	}
 })
-//const { populate } = require('./models/user');
 
 var multer = require('multer');
 
@@ -70,18 +68,19 @@ app.get("error", (req, res) => {
 	res.render("error");
 })
 app.get("/profile", isLoggedIn, (req, res) => {
+	writeToLog("in", req.user.username);
 	res.render("profile", { username: req.user.username });
 })
-//Auth Routes
 app.get("/login", (req, res) => {
-	res.render("login");
+	res.render("login", { msg: "" });
 });
 app.get("/logout", (req, res) => {
+	writeToLog("out", req.user.username);
 	req.logout();
 	res.redirect("/");
 });
 app.get("/register", (req, res) => {
-	res.render("register");
+	res.render("register", { error: "Password: 8 Letters" });
 });
 
 
@@ -91,7 +90,6 @@ app.get("/register", (req, res) => {
 app.get('/uploadFiles', isLoggedIn, (req, res) => {
 	File.find({}, (err, items) => {
 		if (err) {
-			//console.log('storing ERROR')
 			console.log(err);
 			res.status(500).send('An error occurred', err);
 		}
@@ -109,7 +107,7 @@ app.post('/upload', upload.array('file'), (req, res, next) => {
 		var obj = {
 			author: req.user.username,
 			name: element.filename,
-			size: element.size / 1000,
+			size: (element.size / 1000000).toFixed(3),
 			file: {
 				data: fs.readFileSync(path.join(__dirname + '/uploads/' + element.filename)),
 				contentType: 'file'
@@ -123,8 +121,7 @@ app.post('/upload', upload.array('file'), (req, res, next) => {
 			}
 		});
 	});
-	res.redirect('uploadFiles');
-
+	res.redirect('containers');
 });
 
 app.get('/containers', isLoggedIn, (req, res) => {
@@ -143,49 +140,142 @@ app.get('/containers', isLoggedIn, (req, res) => {
 /*
 --------LOGIN / REGISTER ROUTES-----------
 */
-
 app.post("/login", passport.authenticate("local", {
 	successRedirect: "/profile",
 	failureRedirect: "/login"
 }), function (req, res) { });
 
-app.post("/register", (req, res) => {
+app.post("/register", check("username").isLength({ min: 3 }),
+	check("email").isEmail(),
+	check("password").isLength(8), (req, res) => {
 
-	User.register(new User({ username: req.body.username, email: req.body.email }), req.body.password, function (err, user) {
-		if (err) {
-			console.log(err);
-			res.render("register");
+		const errors = validationResult(req);
+		if (!errors.isEmpty()) {
+			return res.render('register', { error: "Invalid Password/Email." });
 		}
-		passport.authenticate("local")(req, res, function () {
-			res.redirect("/login");
+
+		User.register(new User({ username: req.body.username, email: req.body.email, admin: 0 }), req.body.password, function (err, user) {
+			if (err) {
+				console.log(err);
+				res.render("register", { error: "Password: 8 Letters" });
+			}
+			passport.authenticate("local")(req, res, function () {
+				res.redirect("/login");
+			});
 		});
 	});
-});
-
-
 
 /*
----------DELETE / DOWNLOAD ROUTES----------
+---------DELETE / DOWNLOAD & SEARCH ROUTES----------
 */
 app.get('/delete/:name', (req, res) => {
-	File.findOneAndDelete({ author: req.user.username, name: req.params.name }, function (err, docs) {
-		if (err) {
-			console.log(err)
-		}
-		else {
-			fs.unlinkSync(path.join(__dirname + '/uploads/' + req.params.name));
-			console.log("Deleted File : ");
-		}
-	});
-	res.redirect('back');
-
+	try {
+		File.findOneAndDelete({ author: req.user.username, name: req.params.name }, function (err, docs) {
+			if (err) {
+				console.log(err)
+			}
+			else {
+				fs.unlinkSync(path.join(__dirname + '/uploads/' + req.params.name));
+			}
+		});
+		res.redirect('back');
+	} catch (error) {
+		res.redirect('back');
+	}
 });
 
 app.get('/download/:name', (req, res) => {
 	res.send(fs.readFileSync(path.join(__dirname + '/uploads/' + req.params.name)));
 });
 
+app.post('/search', (req, res) => {
+	if (!req.body.searchQ == "") {
+		const s = req.body.searchQ;
+		const regex = new RegExp(s, 'i'); // i for case insensitive
+		File.find({ author: req.user.username, name: { $regex: regex } }, (err, items) => {
+			if (err) {
+				console.log(err);
+				res.redirect('error');
+			} else {
+				res.render('containers', { items: items });
+			}
+		});
+	} else {
+		File.find({}, (err, items) => {
+			if (err) {
+				console.log(err);
+				res.redirect('error');
+			} else {
+				res.render('containers', { items: items });
+			}
+		});
+	}
+});
 
+/*
+------ADMIN ROUTES
+*/
+app.get("/admin", (req, res) => {
+	User.findOne({ username: req.user.username, admin: 1 }, (err, admin) => {
+		console.log(admin);
+		if (!admin | err) {
+			res.redirect('profile');
+		} else {
+			User.find({ admin: 0 }, (err, users) => {
+				if (err) {
+					console.log(err);
+				} else {
+					res.render("admin", { users: users });
+				}
+			});
+		}
+	});
+});
+app.post('/searchUsr', (req, res) => {
+	if (!req.body.searchQ == "") {
+		const s = req.body.searchQ;
+		const regex = new RegExp(s, 'i'); // i for case insensitive
+		User.find({ name: { $regex: regex } }, (err, items) => {
+			if (err) {
+				console.log(err);
+				res.redirect('error');
+			} else {
+				res.render('admin', { items: items });
+			}
+		});
+	} else {
+		User.find({ admin: 0 }, (err, items) => {
+			if (err) {
+				console.log(err);
+				res.redirect('error');
+			} else {
+				res.render('admin', { items: items });
+			}
+		});
+	}
+});
+app.get('/promote/:id', (req, res) => {
+	console.log(req.params.id);
+	User.findOneAndUpdate({ username: req.params.id }, { admin: 1 }, (err) => {
+		console.log(err);
+	});
+	res.redirect('back');
+});
+app.get('/delete/:name', (req, res) => {
+	try {
+		User.findOneAndDelete({ username: req.params.name }, function (err, docs) {
+			if (err) {
+				console.log(err)
+			}
+			else {
+				console.log("deleted");
+			}
+		});
+		res.redirect('back');
+	} catch (error) {
+		res.redirect('back');
+	}
+});
 
 /*
 --------LISTENER--------
@@ -198,7 +288,6 @@ app.listen(process.env.PORT || 3000, function (err) {
 	}
 });
 
-
 /*
 --------FUNCTIONS---------
 */
@@ -207,4 +296,12 @@ function isLoggedIn(req, res, next) {
 		return next();
 	}
 	res.redirect("login");
+}
+
+function writeToLog(txt, usr) {
+	const timeElapsed = Date.now();
+	const today = new Date(timeElapsed);
+	var logtxt = `------${today.toUTCString()}-----\n User ${usr} logged ${txt} successfully.\n----------------------------------------\n\n`;
+
+	fs.appendFileSync('logs/log.txt', logtxt);
 }

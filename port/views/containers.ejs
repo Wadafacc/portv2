@@ -9,7 +9,7 @@
 	<meta charset="UTF-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>port. | Containers</title>
+	<title>port. | containers</title>
 	<link rel="stylesheet" href="/views/styles/container.css">
 	<link rel="stylesheet" href="/views/styles/style.css">
 	<link rel="stylesheet" href="/views/styles/header.css">
@@ -18,10 +18,16 @@
 <body>
 	<div class="header">
 		<a href="/"><span class="logotext">port.</span></a>
+		<form action="/search?" class="search" method="POST">
+			<input type="text" placeholder="search." id="searchQ" name="searchQ">
+			<input type="submit" value="&#128270;">
+			<button href="/search?searchQ=" id="clearQ">❌</button>
+		</form>
 		<div class="nav">
 			<a href="/login">login.</a>
-			<a href="/profile">profile.</a>
+			<a href="/profile">dashboard.</a>
 		</div>
+
 	</div>
 	<div class="flex">
 		<h2>containers.</h2>
@@ -51,12 +57,7 @@
 				<% }) %>
 					<%}%>
 	</div>
-	<h1>
-		<ul>
-			<li><a href="/uploadFiles">Upload Images</a></li>
-			<li><a href="/logout">Logout</a></li>
-		</ul>
-	</h1>
+
 </body>
 
 </html>

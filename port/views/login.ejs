@@ -17,11 +17,10 @@
 
 <body>
     <div class="header">
-        <!-- <img src="../../../assets/images/portlogo.png" alt="logo" width="125rem"> -->
         <a href="/"><span class="logotext">port.</span></a>
         <div class="nav">
             <a href="/login">login.</a>
-            <a href="/profile">profile.</a>
+            <a href="/profile">dashboard.</a>
         </div>
     </div>
 
@@ -40,6 +39,11 @@
                 </div>
             </form>
             <a href="/register" class="nay">no account yet?</a>
+            <h4>
+                <%if(msg){%>
+                    <%= msg%>
+                        <%}%>
+            </h4>
         </div>
     </div>
 </body>

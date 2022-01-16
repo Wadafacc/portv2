@@ -6,7 +6,19 @@
   text-decoration: none;
   float: left;
 }
-a:hover {
-  text-decoration: underline;
+.profile a:hover {
+  background-color: #224877;
+  transition: 0.5s;
+  text-decoration: none !important;
 }
-
+.profile a{
+  display: block;
+  border: none;
+  border-radius: 0.5rem;
+  background-color: #14273e;
+  font-size: 2rem;
+  padding: 1rem;
+  color: white;
+  box-shadow: #4891eb -0.2rem 0.2rem;
+  margin: 1rem;
+}
