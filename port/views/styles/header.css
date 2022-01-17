@@ -41,20 +41,23 @@ img {
   transition: 0.4s;
 }
 
-.search{
-  padding-top:0.5rem;
-  float:right;
+.search {
+  padding-top: 0.5rem;
+  float: right;
   display: flex;
 }
-.search input[type="text"], .search input[type="submit"], #clearQ{
-  float:left;
+.search input[type="text"],
+.search input[type="submit"],
+#clearQ {
+  float: left;
   box-shadow: none !important;
   background-color: rgb(15, 219, 185) !important;
 }
-.search input[type="submit"]:hover, #clearQ:hover{
+.search input[type="submit"]:hover,
+#clearQ:hover {
   background-color: rgb(15, 235, 198) !important;
-  cursor:pointer;
+  cursor: pointer;
 }
-.search input[type="text"]:focus{
+.search input[type="text"]:focus {
   background-color: rgb(15, 235, 198) !important;
 }

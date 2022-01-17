@@ -37,7 +37,7 @@
 			<%items.forEach(function(file) { %>
 				<div>
 					<div class="container">
-						<img src="/views/placeholders/portlogo.png" alt="port.">
+						<img src="/views/placeholders/portlogo.png" alt="port." style="filter: hue-rotate(<%= Math.random()*120%>deg);">
 						<a href="/download/<%= file.name %>"><span class="portname">
 								<%= file.name %>
 							</span></a>

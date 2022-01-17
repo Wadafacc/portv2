@@ -4,10 +4,11 @@
 .container {
   color: white;
   background-color: #14273e;
-  margin: 1rem;
+  margin-left: 0.5rem;
+  margin-right: 0.5rem;
   border-radius: 0.5rem;
-  height: 20rem;
-  width: 15rem;
+  height: 18rem;
+  width: 12.5rem;
   padding: 1rem;
   box-shadow: #4891eb -0.2rem 0.2rem;
 }
@@ -15,7 +16,7 @@
 img {
   display: inline-block;
   overflow: hidden;
-  height: 15rem;
+  height: 12.5rem;
 }
 
 .container:hover {
@@ -25,30 +26,32 @@ img {
 }
 
 .portname {
-  float:left;
+  float: left;
   display: block;
   font-family: "Poppins", sans-serif;
   font-size: 1.5rem;
-  max-width: 13rem;
+  max-width: 11rem;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 .portsize {
-  float:left;
-  display:block;
-  width:100%;
+  float: left;
+  display: block;
+  width: 100%;
   color: #00ffdd;
   font-size: 1.2rem;
 }
 .flexC {
+  margin-left: 0.5rem;
   display: flex;
-  align-items:flex-start;
-  justify-content:flex-start;
+  align-items: flex-start;
+  justify-content: flex-start;
   flex-wrap: wrap;
+  overflow-y: auto;
 }
 
-.trashcan{
-  float:right;
-  display:flex;
+.trashcan {
+  float: right;
+  display: flex;
 }

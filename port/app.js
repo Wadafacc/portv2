@@ -64,7 +64,7 @@ var upload = multer({ storage: storage });
 app.get("/", (req, res) => {
 	res.render("home");
 })
-app.get("error", (req, res) => {
+app.get("/error", (req, res) => {
 	res.render("error");
 })
 app.get("/profile", isLoggedIn, (req, res) => {
@@ -175,17 +175,24 @@ app.get('/delete/:name', (req, res) => {
 				console.log(err)
 			}
 			else {
-				fs.unlinkSync(path.join(__dirname + '/uploads/' + req.params.name));
+				try {
+					fs.unlinkSync(path.join(__dirname + '/uploads/' + req.params.name));
+				} catch (error) {
+				}
 			}
 		});
 		res.redirect('back');
 	} catch (error) {
-		res.redirect('back');
+		res.render('containers');
 	}
 });
 
 app.get('/download/:name', (req, res) => {
-	res.send(fs.readFileSync(path.join(__dirname + '/uploads/' + req.params.name)));
+	try {
+		res.send(fs.readFileSync(path.join(__dirname + '/uploads/' + req.params.name)));
+	} catch (error) {
+		res.redirect('/error');
+	}
 });
 
 app.post('/search', (req, res) => {
@@ -217,7 +224,6 @@ app.post('/search', (req, res) => {
 */
 app.get("/admin", (req, res) => {
 	User.findOne({ username: req.user.username, admin: 1 }, (err, admin) => {
-		console.log(admin);
 		if (!admin | err) {
 			res.redirect('profile');
 		} else {
@@ -232,24 +238,24 @@ app.get("/admin", (req, res) => {
 	});
 });
 app.post('/searchUsr', (req, res) => {
-	if (!req.body.searchQ == "") {
-		const s = req.body.searchQ;
-		const regex = new RegExp(s, 'i'); // i for case insensitive
-		User.find({ name: { $regex: regex } }, (err, items) => {
+	if (req.body.searchQQ != "") {
+		const s = req.body.searchQQ;
+		const r = new RegExp(s, 'i'); // i for case insensitive
+		User.find({ username: { $regex: r }, admin:0 }, (err, usrs) => {
 			if (err) {
 				console.log(err);
 				res.redirect('error');
 			} else {
-				res.render('admin', { items: items });
+				res.render('admin', { users: usrs });
 			}
 		});
 	} else {
-		User.find({ admin: 0 }, (err, items) => {
+		User.find({ admin: 0 }, (err, users) => {
 			if (err) {
 				console.log(err);
 				res.redirect('error');
 			} else {
-				res.render('admin', { items: items });
+				res.render('admin', { users: users });
 			}
 		});
 	}
@@ -261,11 +267,11 @@ app.get('/promote/:id', (req, res) => {
 	});
 	res.redirect('back');
 });
-app.get('/delete/:name', (req, res) => {
+app.get('/deleteUsr/:name', (req, res) => {
 	try {
 		User.findOneAndDelete({ username: req.params.name }, function (err, docs) {
 			if (err) {
-				console.log(err)
+				console.log(err);
 			}
 			else {
 				console.log("deleted");
